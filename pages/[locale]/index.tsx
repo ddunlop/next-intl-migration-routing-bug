@@ -1,5 +1,6 @@
 import { Link } from "@/i18n/routing";
-import { NextPageContext } from "next";
+import { GetStaticProps } from "next";
+import { ParsedUrlQuery } from "querystring";
 
 export const getStaticPaths = () => {
   const paths = ["en-US", "es"].map((locale) => {
@@ -11,10 +12,18 @@ export const getStaticPaths = () => {
   return { paths, fallback: false };
 };
 
-export const getStaticProps = async (context: NextPageContext) => {
-  const {
-    params: { locale },
-  } = context;
+interface Props {
+  locale: string;
+}
+
+interface PageParams extends ParsedUrlQuery {
+  locale: string;
+}
+
+export const getStaticProps: GetStaticProps<Props, PageParams> = async (
+  context
+) => {
+  const locale = context.params?.locale ?? "en-US";
 
   return { props: { locale } };
 };
